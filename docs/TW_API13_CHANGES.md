@@ -16,13 +16,26 @@ The base lacks the `InventoryAck` world-state tracking that upstream `75f9a969f`
 
 ## Build and package
 
-Target: `net9.0-windows`, `DalamudPackager` 13.1.0, .NET 9, assemblies from `$DALAMUD_HOME`. The exact build command is not recorded.
+Target: `net9.0-windows`, `DalamudPackager` 13.1.0, .NET 9, assemblies from `$DALAMUD_HOME`.
 
-Last package: `BossMod/bin/Release/BossModReborn/latest.zip`, `DalamudApiLevel` 13, `AssemblyVersion` 7.3.5.0, built 2026-08-06 (date from the package timestamp).
+Build command, run from the repository root:
 
-Checked mechanically:
+```bash
+dotnet restore BossMod/BossModReborn.csproj --locked-mode "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo
+dotnet build BossMod/BossModReborn.csproj -c Release --no-restore "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo
+```
 
-- The manifest declares Dalamud API 13.
+Last verified build: 2026-11-27, commit `18d0e7f97`:
+
+- `DalamudApiLevel`: 13.
+- `AssemblyVersion`: 0.0.0.0.
+- Package: `BossMod/bin/Release/BossModReborn/latest.zip`.
+- `latest.zip` SHA-256: `6186e6030377bff4ab191b6e016fc300e974e9f2c141d2d1c051515336eab6bf`.
+
+This build supersedes the earlier package record (`AssemblyVersion` 7.3.5.0, built 2026-08-06 by package timestamp).
+
+Earlier mechanical checks, not repeated for this build:
+
 - The mandatory `InventoryAck` signature added after 7.3.5 is absent.
 - `FFXIVClientStructs` is checked out at the pinned commit.
 - Restore, build, and package use `$DALAMUD_HOME`.
