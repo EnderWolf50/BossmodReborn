@@ -1,43 +1,44 @@
-# BossModReborn Taiwan API 13 maintenance record
+# BossModReborn Taiwan API 13 maintenance
 
-## Lineage and baseline
+## Lineage
 
-- Authoritative upstream: <https://github.com/FFXIV-CombatReborn/BossmodReborn>
-- Regional branch: `api13`
-- Selected upstream tag: `7.3.5.0`
-- Selected upstream commit: `5f4602bc660770d206b8043f3e3101b2879f047b`
-- Pinned FFXIVClientStructs commit: `e279b05e9a6d3a0eff85e7bcaec0fe523358afba`
-- Target environment: preserved Taiwan Dalamud API 13, .NET 9, resolved through `$DALAMUD_HOME`
+- Upstream: <https://github.com/FFXIV-CombatReborn/BossmodReborn> (remote `origin`, default branch `main`). The local `main` branch tracks it.
+- Base: `5f4602bc660770d206b8043f3e3101b2879f047b`, tag `7.3.5.0`, committed 2025-10-07. It pins submodule `FFXIVClientStructs` at `e279b05e9a6d3a0eff85e7bcaec0fe523358afba`.
+- The base is deliberately earlier than upstream's last API 13 revision. That revision is tag `7.3.8.4` (`eac2da11f567fa3163747090ff4ff24dbd2d350b`, 2025-12-16). `git log 5f4602b..origin/main -G'DalamudApiLevel' -- manifest.json` first finds `067b063ed` "Update manifest.json" (2025-12-18, tag `7.4.0.0`), which sets `DalamudApiLevel` to 14.
+- Why the base is earlier: `7.3.8.4` loads a mandatory `InventoryAck` hook from `WorldStateGameSync`. On the Taiwan client, Dalamud could not find its hard-coded signature, which aborted `WorldStateGameSync` and then the plugin constructor. `7.3.5.0` predates the hook and still has `DalamudApiLevel` 13, `net9.0-windows`, and `DalamudPackager` 13.1.0.
+- Compared against: `cycleapple/RotationSolverReborn` branch `api13-tw`, a Taiwan fork confirmed working in game. It is based on the official `7.3.5.0` game-version line and pins historical versions and dependencies instead of adding Taiwan-specific signatures. This branch follows the same version line.
 
-## Why this baseline is pinned
+## Changes
 
-The later upstream API 13 tag `7.3.8.4` loads a mandatory `InventoryAck` hook from `WorldStateGameSync`. On the Taiwan client, Dalamud reported that its hard-coded machine-code signature could not be found, which aborted `WorldStateGameSync` and then the plugin constructor.
+None. The branch is the upstream base unchanged. Local commit `02852306f` adds only `AGENTS.md` and this record.
 
-A confirmed-working Taiwan fork, `cycleapple/RotationSolverReborn` branch `api13-tw`, is based exactly on the corresponding official `7.3.5.0` game-version line. Its compatibility strategy is historical version and dependency pinning; it does not add Taiwan-specific signatures. BossModReborn's `7.3.5.0` tag predates the later mandatory `InventoryAck` hook and retains `DalamudApiLevel` 13, `net9.0-windows`, and `DalamudPackager` 13.1.0.
+The base lacks the `InventoryAck` world-state tracking that upstream `75f9a969f` added later. No signature bytes are replaced or wildcarded, and no scanner exception is suppressed.
 
-This branch therefore follows the known-working regional version line rather than guessing a replacement signature from a newer client.
+## Build and package
 
-## Behavioral difference from upstream 7.3.8.4
+Target: `net9.0-windows`, `DalamudPackager` 13.1.0, .NET 9, assemblies from `$DALAMUD_HOME`. The exact build command is not recorded.
 
-The 7.3.5.0 baseline does not include the later InventoryAck world-state tracking added by upstream commit `75f9a969f`. This is deliberate: the Taiwan 7.3.5-compatible client does not expose the later signature observed by that code. No signature bytes are replaced or wildcarded, and no scanner exception is suppressed.
+Last package: `BossMod/bin/Release/BossModReborn/latest.zip`, `DalamudApiLevel` 13, `AssemblyVersion` 7.3.5.0, built 2026-08-06 (date from the package timestamp).
 
-## Verification
+Checked mechanically:
 
-Mechanically verified:
+- The manifest declares Dalamud API 13.
+- The mandatory `InventoryAck` signature added after 7.3.5 is absent.
+- `FFXIVClientStructs` is checked out at the pinned commit.
+- Restore, build, and package use `$DALAMUD_HOME`.
+- A Release deploy must be hash-verified.
 
-- Manifest declares Dalamud API 13.
-- The post-7.3.5 mandatory InventoryAck signature is absent.
-- FFXIVClientStructs is initialized at the pinned submodule commit.
-- Restore/build/package checks use the preserved `$DALAMUD_HOME` environment.
-- Release deployment must be hash-verified.
+## Runtime verification
 
-Pending runtime checks after each build:
+Confirmed in game: `7.3.8.4` failed in the plugin constructor on the missing `InventoryAck` signature (date not recorded). The ffxiv_bossmod record describes the BossModReborn `7.3.5.0` line as previously runtime-validated on the Taiwan client. This record has no date or details for that check.
+
+Pending after each build:
 
 1. Reload BossModReborn in the Taiwan client.
 2. Confirm the plugin constructor completes without a signature exception.
-3. Enter a duty and verify world-state, encounter modules, movement hints, and autorotation behavior.
-4. Record any subsequent failing mandatory signature separately; do not assume all signatures are region-compatible from build success alone.
+3. Enter a duty and check world state, encounter modules, movement hints, and autorotation.
+4. Record each later failing mandatory signature on its own. A passing build does not show that all signatures work on the Taiwan client.
 
-## Rebase notes
+## Rebase policy
 
-When evaluating a newer API 13 upstream tag, compare its game-version line and all mandatory `HookFromSignature`/`ScanText` additions against this baseline. A manifest that still declares API 13 is insufficient evidence of Taiwan binary compatibility. Keep `main` available for upstream tracking and carry regional decisions only on `api13`.
+To evaluate a newer API 13 upstream tag, compare its game-version line and every mandatory `HookFromSignature` and `ScanText` addition against `7.3.5.0`. A manifest that still declares API 13 is not evidence of Taiwan binary compatibility. Keep `main` for upstream tracking, and carry regional decisions only on `api13`.

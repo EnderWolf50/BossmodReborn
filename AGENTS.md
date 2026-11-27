@@ -1,13 +1,11 @@
-# BossModReborn API 13 regional maintenance
+# BossModReborn Taiwan API 13 branch
 
-This checkout keeps `main` aligned with the authoritative `FFXIV-CombatReborn/BossmodReborn` upstream and uses the concise `api13` branch for the preserved Taiwan Dalamud API 13 environment.
-
-Before changing the API 13 branch, read `docs/TW_API13_CHANGES.md`.
+`api13` keeps FFXIV-CombatReborn/BossmodReborn at an earlier Dalamud API 13 revision than its last one, for the Taiwan client (game 7.3), plus the changes in `docs/TW_API13_CHANGES.md`. Read that record before changing this branch.
 
 ## Invariants
 
-- Build against `$DALAMUD_HOME`; do not substitute a current global Dalamud installation.
-- Keep the API 13 baseline aligned with the Taiwan game-version line, not merely the newest upstream tag whose manifest still says API 13.
-- Do not copy signatures from newer game/API versions without evidence from the target Taiwan executable.
-- Treat successful build/package verification separately from in-game plugin-load verification.
-- Record any future Taiwan-specific signature, client-structure, or localized behavior change in the maintenance note.
+- Build against `$DALAMUD_HOME`. Do not substitute a current global Dalamud installation.
+- Keep the base on the Taiwan game-version line, not on the newest upstream tag whose manifest still says API 13.
+- Do not copy signatures from newer game or API versions without evidence from the Taiwan executable.
+- Treat a passing build and package check separately from an in-game plugin load.
+- Record every Taiwan-specific signature, client-structure, or localized behavior change in `docs/TW_API13_CHANGES.md`.
