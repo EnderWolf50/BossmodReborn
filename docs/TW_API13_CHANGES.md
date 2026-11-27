@@ -22,15 +22,15 @@ Build command, run from the repository root:
 
 ```bash
 dotnet restore BossMod/BossModReborn.csproj --locked-mode "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo
-dotnet build BossMod/BossModReborn.csproj -c Release --no-restore "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo
+dotnet build BossMod/BossModReborn.csproj -c Release --no-restore "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo -p:Version=0.0.0.1
 ```
 
-Last verified build: 2026-11-27, commit `18d0e7f97`:
+Last verified build: 2026-11-27, commit `5f148fdb8`:
 
 - `DalamudApiLevel`: 13.
-- `AssemblyVersion`: 0.0.0.0.
+- `AssemblyVersion`: 0.0.0.1.
 - Package: `BossMod/bin/Release/BossModReborn/latest.zip`.
-- `latest.zip` SHA-256: `6186e6030377bff4ab191b6e016fc300e974e9f2c141d2d1c051515336eab6bf`.
+- `latest.zip` SHA-256: `4e4b044e896a111e29f5668c76a405c13f3320c513aeb19e0b5d81dca0178c98`.
 
 This build supersedes the earlier package record (`AssemblyVersion` 7.3.5.0, built 2026-08-06 by package timestamp).
 
