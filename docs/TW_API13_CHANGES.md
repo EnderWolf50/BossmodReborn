@@ -22,15 +22,15 @@ Build command, run from the repository root:
 
 ```bash
 dotnet restore BossMod/BossModReborn.csproj --locked-mode "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo
-dotnet build BossMod/BossModReborn.csproj -c Release --no-restore "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo -p:Version=0.0.0.1
+dotnet build BossMod/BossModReborn.csproj -c Release --no-restore "-p:DalamudLibPath=$DALAMUD_HOME/" --nologo -p:Version=7.3.5.0 -p:AssemblyVersion=7.3.5.0 -p:FileVersion=7.3.5.0
 ```
 
-Last verified build: 2026-11-27, commit `5f148fdb8`:
+Last verified build: 2026-11-29, commit `a60438b46`, through `scripts/build_plugins.py` in the home repo:
 
 - `DalamudApiLevel`: 13.
-- `AssemblyVersion`: 0.0.0.1.
-- Package: `BossMod/bin/Release/BossModReborn/latest.zip`.
-- `latest.zip` SHA-256: `4e4b044e896a111e29f5668c76a405c13f3320c513aeb19e0b5d81dca0178c98`.
+- `AssemblyVersion`: 7.3.5.0 in the DLL, upstream's release tag `7.3.5.0`, which points at the base; upstream's CI passes the tag as `AssemblyVersion`. The published manifest says 7.3.5.1 (Taiwan patch 1; see the home repo's `AGENTS.md`, Registry).
+- Package: `.local/packages/BossModReborn/latest.zip` in the home repo, the build's `BossMod/bin/Release/BossModReborn/latest.zip` with that manifest version.
+- `latest.zip` SHA-256: `b202c5858a646ac01fe07ca690e123ce2e2deb09d901c0f576e4e5ff0339f502`.
 
 This build supersedes the earlier package record (`AssemblyVersion` 7.3.5.0, built 2026-08-06 by package timestamp).
 
